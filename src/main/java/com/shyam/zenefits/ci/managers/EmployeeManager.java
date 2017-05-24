@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shyam.zenefits.ci.connector.EmployeeConnector;
+import com.shyam.zenefits.ci.pojo.EmployeeBankAccount;
 import com.shyam.zenefits.ci.pojo.EmployeeDetails;
 
 @Service
@@ -15,5 +16,9 @@ public class EmployeeManager extends AbstractManager {
 
 	public List<EmployeeDetails> getEmployeeDetails(String personId) throws Exception {
 		return employeeConnector.getEmployeeDetails(personId);
+	}
+
+	public List<EmployeeBankAccount> getEmployeeBankAccounts(String personId) throws Exception {
+		return employeeConnector.getEmployeeBankAccount(personId);
 	}
 }

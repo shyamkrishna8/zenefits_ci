@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shyam.zenefits.ci.connector.CompanyConnector;
+import com.shyam.zenefits.ci.pojo.CompanyBankAccount;
 import com.shyam.zenefits.ci.pojo.CompanyBasicInfo;
 
 @Service
@@ -18,4 +19,7 @@ public class CompanyManager {
 		return companiesConnector.getCoreCompanies();
 	}
 
+	public List<CompanyBankAccount> getCompanyBankAccount(String companyId) throws Exception {
+		return companiesConnector.getCompanyBankAccount(companyId);
+	}
 }

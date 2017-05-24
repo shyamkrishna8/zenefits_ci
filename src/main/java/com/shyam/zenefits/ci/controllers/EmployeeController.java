@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shyam.zenefits.ci.managers.EmployeeManager;
+import com.shyam.zenefits.ci.pojo.EmployeeBankAccount;
 import com.shyam.zenefits.ci.pojo.EmployeeDetails;
 
 @RestController
@@ -26,5 +27,13 @@ public class EmployeeController {
 			throws Exception {
 		// TODO : Authentication
 		return employeeManager.getEmployeeDetails(employeeId);
+	}
+
+	@RequestMapping(value = "/banks", method = RequestMethod.GET)
+	@ResponseBody
+	public List<EmployeeBankAccount> getComapnyBankAccount(
+			@RequestParam(name = "personId", required = true) String personId) throws Exception {
+		// TODO : Authentication
+		return employeeManager.getEmployeeBankAccounts(personId);
 	}
 }

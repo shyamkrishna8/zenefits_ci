@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.shyam.zenefits.ci.pojo.PersonInfo;
-import com.sun.jersey.api.client.ClientResponse;
 
 @Service
 public class PeopleConnector extends AbstractZenefitsConnector {

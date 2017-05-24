@@ -11,8 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.shyam.zenefits.ci.pojo.EmployeeBankAccount;
 import com.shyam.zenefits.ci.pojo.EmployeeDetails;
-import com.sun.jersey.api.client.ClientResponse;
 
 @Service
 public class EmployeeConnector extends AbstractZenefitsConnector {
@@ -23,10 +23,15 @@ public class EmployeeConnector extends AbstractZenefitsConnector {
 	public void init() {
 	}
 
-	public List<EmployeeDetails> getEmployeeDetails(String personId)
-			throws Exception {
+	public List<EmployeeDetails> getEmployeeDetails(String personId) throws Exception {
 		String output = getWebData(getEmployeeUrl(personId));
 		return parseEmployeeDetailsResponse(output);
+	}
+
+	public List<EmployeeBankAccount> getEmployeeBankAccount(String personId) throws Exception {
+		// Parse the response
+		String output = getWebData(getEmployeeBankAccountUrl(personId));
+		return parseEmployeeBankAccountResponse(output);
 	}
 
 	private static List<EmployeeDetails> parseEmployeeDetailsResponse(String output)
@@ -58,8 +63,41 @@ public class EmployeeConnector extends AbstractZenefitsConnector {
 		return results;
 	}
 
+	private static List<EmployeeBankAccount> parseEmployeeBankAccountResponse(String output)
+			throws IllegalArgumentException, IllegalAccessException {
+		List<EmployeeBankAccount> results = new ArrayList<>();
+		if (StringUtils.isEmpty(output)) {
+			return results;
+		}
+
+		// Re-validate the status
+		JSONObject jsonObject = new JSONObject(output);
+		int status = jsonObject.getInt("status");
+		if (status != HttpStatus.OK.value()) {
+			throw new InternalError("Error occured fetching the details. Kindly try after some time", null);
+		}
+
+		JSONObject dataObject = jsonObject.getJSONObject("data");
+		JSONArray employeeBankAccountData = dataObject.getJSONArray("data");
+
+		System.out.println("Output:" + employeeBankAccountData.toString());
+		if (employeeBankAccountData.length() > 0) {
+			for (int i = 0; i < employeeBankAccountData.length(); i++) {
+				JSONObject jsonEmployeeBankAccountEntry = employeeBankAccountData.getJSONObject(i);
+				EmployeeBankAccount employeeBankAccount = gson.fromJson(jsonEmployeeBankAccountEntry.toString(),
+						EmployeeBankAccount.class);
+				employeeBankAccount.processNavigationUrls(jsonEmployeeBankAccountEntry);
+				results.add(employeeBankAccount);
+			}
+		}
+		return results;
+	}
+
 	private static String getEmployeeUrl(String personId) {
 		return GET_PEOPLE_API_URL + "/" + personId + "/employments";
 	}
 
+	private static String getEmployeeBankAccountUrl(String personId) {
+		return GET_PEOPLE_API_URL + "/" + personId + "/banks";
+	}
 }
