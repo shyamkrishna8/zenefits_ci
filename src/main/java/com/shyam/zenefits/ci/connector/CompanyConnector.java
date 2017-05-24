@@ -12,18 +12,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.shyam.zenefits.ci.pojo.CompanyBankAccount;
 import com.shyam.zenefits.ci.pojo.CompanyBasicInfo;
+import com.shyam.zenefits.ci.pojo.DepartmentInfo;
+import com.shyam.zenefits.ci.pojo.LocationInfo;
 
 @Service
 public class CompanyConnector extends AbstractZenefitsConnector {
 
-	private static final String GET_COMPANIES_BASE_API_URL = API_BASE_URL + "/core/companies"; //https://api.zenefits.com/
+	private static final String GET_COMPANIES_BASE_API_URL = API_BASE_URL + "/core/companies"; // https://api.zenefits.com/
 
-	private static Gson gson = new Gson();
-	private static Type COMPANY_INFO_LIST_TYPE = new TypeToken<List<CompanyBasicInfo>>() {}.getType();
+	private static Type COMPANY_INFO_LIST_TYPE = new TypeToken<List<CompanyBasicInfo>>() {
+	}.getType();
 
 	@PostConstruct
 	public void init() {
@@ -36,8 +37,20 @@ public class CompanyConnector extends AbstractZenefitsConnector {
 
 	public List<CompanyBankAccount> getCompanyBankAccount(String companyId) throws Exception {
 		// Parse the response
-		String output = getWebData(getPeopleUrl(companyId));
+		String output = getWebData(getCompanyBankUrl(companyId));
 		return parseCompanyBankAccountResponse(output);
+	}
+
+	public List<DepartmentInfo> getCompanyDepartments(String companyId) throws Exception {
+		// Parse the response
+		String output = getWebData(getCompanyDepartmentsUrl(companyId));
+		return parseCompanyDepartmentResponse(output);
+	}
+
+	public List<LocationInfo> getCompanyLocations(String companyId) throws Exception {
+		// Parse the response
+		String output = getWebData(getCompanyLocationsUrl(companyId));
+		return parseCompanyLocationResponse(output);
 	}
 
 	private static List<CompanyBasicInfo> parseCompanyInfo(String output) {
@@ -90,11 +103,80 @@ public class CompanyConnector extends AbstractZenefitsConnector {
 		return results;
 	}
 
+	private static List<LocationInfo> parseCompanyLocationResponse(String output)
+			throws IllegalArgumentException, IllegalAccessException {
+		List<LocationInfo> results = new ArrayList<>();
+		if (StringUtils.isEmpty(output)) {
+			return results;
+		}
+
+		// Re-validate the status
+		JSONObject jsonObject = new JSONObject(output);
+		int status = jsonObject.getInt("status");
+		if (status != HttpStatus.OK.value()) {
+			throw new InternalError("Error occured fetching the details. Kindly try after some time", null);
+		}
+
+		JSONObject dataObject = jsonObject.getJSONObject("data");
+		JSONArray companylocationInfoData = dataObject.getJSONArray("data");
+
+		System.out.println("Output:" + companylocationInfoData.toString());
+		if (companylocationInfoData.length() > 0) {
+			for (int i = 0; i < companylocationInfoData.length(); i++) {
+				JSONObject jsonCompanyLocationEntry = companylocationInfoData.getJSONObject(i);
+				LocationInfo companyLocationInfo = gson.fromJson(jsonCompanyLocationEntry.toString(),
+						LocationInfo.class);
+				companyLocationInfo.processNavigationUrls(jsonCompanyLocationEntry);
+				results.add(companyLocationInfo);
+			}
+		}
+		return results;
+	}
+
+	private static List<DepartmentInfo> parseCompanyDepartmentResponse(String output)
+			throws IllegalArgumentException, IllegalAccessException {
+		List<DepartmentInfo> results = new ArrayList<>();
+		if (StringUtils.isEmpty(output)) {
+			return results;
+		}
+
+		// Re-validate the status
+		JSONObject jsonObject = new JSONObject(output);
+		int status = jsonObject.getInt("status");
+		if (status != HttpStatus.OK.value()) {
+			throw new InternalError("Error occured fetching the details. Kindly try after some time", null);
+		}
+
+		JSONObject dataObject = jsonObject.getJSONObject("data");
+		JSONArray companyDepartmentData = dataObject.getJSONArray("data");
+
+		System.out.println("Output:" + companyDepartmentData.toString());
+		if (companyDepartmentData.length() > 0) {
+			for (int i = 0; i < companyDepartmentData.length(); i++) {
+				JSONObject jsonCompanyDepartmentEntry = companyDepartmentData.getJSONObject(i);
+				DepartmentInfo companyDepartmentAccount = gson.fromJson(jsonCompanyDepartmentEntry.toString(),
+						DepartmentInfo.class);
+				companyDepartmentAccount.processNavigationUrls(jsonCompanyDepartmentEntry);
+				results.add(companyDepartmentAccount);
+			}
+		}
+		return results;
+	}
+
 	private static String getCompanyUrl() {
 		return GET_COMPANIES_BASE_API_URL;
 	}
 
-	private static String getPeopleUrl(String companyId) {
+	private static String getCompanyBankUrl(String companyId) {
 		return GET_COMPANIES_BASE_API_URL + "/" + companyId + "/company_banks";
 	}
+
+	private static String getCompanyDepartmentsUrl(String companyId) {
+		return GET_COMPANIES_BASE_API_URL + "/" + companyId + "/departments";
+	}
+
+	private static String getCompanyLocationsUrl(String companyId) {
+		return GET_COMPANIES_BASE_API_URL + "/" + companyId + "/locations";
+	}
+
 }
