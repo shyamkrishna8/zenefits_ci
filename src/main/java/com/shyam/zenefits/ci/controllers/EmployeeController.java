@@ -3,6 +3,7 @@ package com.shyam.zenefits.ci.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,19 +21,17 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeManager employeeManager;
 
-	@RequestMapping(value = "/get", method = RequestMethod.GET)
+	@RequestMapping(value = "/{personId}/get", method = RequestMethod.GET)
 	@ResponseBody
-	public List<EmployeeDetails> getEmployeeDetails(
-			@RequestParam(name = "employeeId", required = true) String employeeId)
+	public List<EmployeeDetails> getEmployeeDetails(@RequestParam(name = "personId", required = true) String personId)
 			throws Exception {
 		// TODO : Authentication
-		return employeeManager.getEmployeeDetails(employeeId);
+		return employeeManager.getEmployeeDetails(personId);
 	}
 
-	@RequestMapping(value = "/banks", method = RequestMethod.GET)
+	@RequestMapping(value = "/{personId}/banks", method = RequestMethod.GET)
 	@ResponseBody
-	public List<EmployeeBankAccount> getComapnyBankAccount(
-			@RequestParam(name = "personId", required = true) String personId) throws Exception {
+	public List<EmployeeBankAccount> getComapnyBankAccount(@PathVariable("personId") String personId) throws Exception {
 		// TODO : Authentication
 		return employeeManager.getEmployeeBankAccounts(personId);
 	}
