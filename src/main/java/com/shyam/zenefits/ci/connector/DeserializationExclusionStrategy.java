@@ -1,4 +1,4 @@
-package com.shyam.zenefits.ci.utils;
+package com.shyam.zenefits.ci.connector;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
@@ -16,7 +16,7 @@ public class DeserializationExclusionStrategy implements ExclusionStrategy{
 		Collection<Annotation> annotations = f.getAnnotations();
 		if (!CollectionUtils.isEmpty(annotations)) {
 			for (Annotation annotation : annotations) {
-				if (annotation instanceof Expose) {
+				if (annotation instanceof Expose && !((Expose) annotation).deserialize()) {
 					return true;
 				}
 			}
@@ -28,5 +28,4 @@ public class DeserializationExclusionStrategy implements ExclusionStrategy{
 	public boolean shouldSkipClass(Class<?> clazz) {
 		return false;
 	}
-
 }

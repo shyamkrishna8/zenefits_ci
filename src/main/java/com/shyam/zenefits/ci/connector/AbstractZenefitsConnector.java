@@ -5,7 +5,6 @@ import org.springframework.http.HttpMethod;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.shyam.zenefits.ci.utils.ConfigUtils;
-import com.shyam.zenefits.ci.utils.DeserializationExclusionStrategy;
 import com.shyam.zenefits.ci.utils.WebUtils;
 import com.sun.jersey.api.client.ClientResponse;
 
