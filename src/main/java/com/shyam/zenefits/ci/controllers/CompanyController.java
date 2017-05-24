@@ -20,7 +20,7 @@ public class CompanyController {
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	@ResponseBody
-	public List<CompanyBasicInfo> getCoreCompanies() {
+	public List<CompanyBasicInfo> getCoreCompanies() throws Exception {
 		// TODO : Authentication
 		return companyManager.getCoreCompanies();
 	}

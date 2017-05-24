@@ -23,14 +23,9 @@ public class PeopleConnector extends AbstractZenefitsConnector {
 	public void init() {
 	}
 
-	public List<PersonInfo> getCompanyPeople(String companyId) throws IllegalArgumentException, IllegalAccessException {
-		ClientResponse cRes = getWebData(getPeopleUrl(companyId));
-		if (cRes.getStatus() != HttpStatus.OK.value()) {
-			throw new InternalError("Error occured fetching the details. Kindly try after some time", null);
-		}
-
+	public List<PersonInfo> getCompanyPeople(String companyId) throws Exception {
 		// Parse the response
-		String output = cRes.getEntity(String.class);
+		String output = getWebData(getPeopleUrl(companyId));
 		return parsePeopleResponse(output);
 	}
 

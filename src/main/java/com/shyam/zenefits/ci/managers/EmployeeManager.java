@@ -13,7 +13,7 @@ public class EmployeeManager extends AbstractManager {
 	@Autowired
 	private EmployeeConnector employeeConnector;
 
-	public List<EmployeeDetails> getEmployeeDetails(String personId) throws IllegalArgumentException, IllegalAccessException {
+	public List<EmployeeDetails> getEmployeeDetails(String personId) throws Exception {
 		return employeeConnector.getEmployeeDetails(personId);
 	}
 }

@@ -24,14 +24,8 @@ public class EmployeeConnector extends AbstractZenefitsConnector {
 	}
 
 	public List<EmployeeDetails> getEmployeeDetails(String personId)
-			throws IllegalArgumentException, IllegalAccessException {
-		ClientResponse cRes = getWebData(getEmployeeUrl(personId));
-		if (cRes.getStatus() != HttpStatus.OK.value()) {
-			throw new InternalError("Error occured fetching the details. Kindly try after some time", null);
-		}
-
-		// Parse the response
-		String output = cRes.getEntity(String.class);
+			throws Exception {
+		String output = getWebData(getEmployeeUrl(personId));
 		return parseEmployeeDetailsResponse(output);
 	}
 

@@ -23,7 +23,7 @@ public class EmployeeController {
 	@ResponseBody
 	public List<EmployeeDetails> getEmployeeDetails(
 			@RequestParam(name = "employeeId", required = true) String employeeId)
-			throws IllegalArgumentException, IllegalAccessException {
+			throws Exception {
 		// TODO : Authentication
 		return employeeManager.getEmployeeDetails(employeeId);
 	}

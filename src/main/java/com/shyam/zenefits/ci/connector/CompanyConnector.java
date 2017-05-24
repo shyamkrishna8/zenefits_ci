@@ -29,14 +29,8 @@ public class CompanyConnector extends AbstractZenefitsConnector {
 	public void init() {
 	}
 
-	public List<CompanyBasicInfo> getCoreCompanies() {
-		ClientResponse cRes = getWebData(GET_CORE_COMPANIES_API_URL);
-		if (cRes.getStatus() != HttpStatus.OK.value()) {
-			throw new InternalError("Error occured fetching the details. Kindly try after some time", null);
-		}
-
-		// Parse the response
-		String output = cRes.getEntity(String.class);
+	public List<CompanyBasicInfo> getCoreCompanies() throws Exception {
+		String output = getWebData(GET_CORE_COMPANIES_API_URL);
 		return parseCompanyInfo(output);
 	}
 

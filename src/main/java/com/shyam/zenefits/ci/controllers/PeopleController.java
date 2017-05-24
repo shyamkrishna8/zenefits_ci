@@ -22,7 +22,7 @@ public class PeopleController {
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PersonInfo> getCompanyPeople(@RequestParam(name="companyId", required=true) String companyId) throws IllegalArgumentException, IllegalAccessException {
+	public List<PersonInfo> getCompanyPeople(@RequestParam(name="companyId", required=true) String companyId) throws Exception {
 		// TODO : Authentication
 		return peopleManager.getCompanyPeople(companyId);
 	}

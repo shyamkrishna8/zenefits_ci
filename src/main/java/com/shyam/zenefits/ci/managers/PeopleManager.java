@@ -15,7 +15,7 @@ public class PeopleManager {
 	private PeopleConnector peopleConnector;
 
 
-	public List<PersonInfo> getCompanyPeople(String companyId) throws IllegalArgumentException, IllegalAccessException {
+	public List<PersonInfo> getCompanyPeople(String companyId) throws Exception {
 		return peopleConnector.getCompanyPeople(companyId);
 	}
 }

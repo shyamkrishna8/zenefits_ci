@@ -14,7 +14,7 @@ public class CompanyManager {
 	@Autowired
 	private CompanyConnector companiesConnector;
 
-	public List<CompanyBasicInfo> getCoreCompanies() {
+	public List<CompanyBasicInfo> getCoreCompanies() throws Exception {
 		return companiesConnector.getCoreCompanies();
 	}
 
