@@ -1,12 +1,12 @@
 package com.shyam.zenefits.ci.managers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shyam.zenefits.ci.connector.PeopleConnector;
-import com.shyam.zenefits.ci.pojo.PersonInfo;
+import com.shyam.zenefits.ci.exceptions.ZException;
+import com.shyam.zenefits.ci.requests.GetPeoplesReq;
+import com.shyam.zenefits.ci.response.BasicListResponse;
 
 @Service
 public class PeopleManager {
@@ -15,7 +15,7 @@ public class PeopleManager {
 	private PeopleConnector peopleConnector;
 
 
-	public List<PersonInfo> getCompanyPeople(String companyId) throws Exception {
-		return peopleConnector.getCompanyPeople(companyId);
+	public BasicListResponse getCompanyPeople(String companyId, GetPeoplesReq getPeoplesReq) throws ZException {
+		return peopleConnector.getCompanyPeople(companyId, getPeoplesReq);
 	}
 }

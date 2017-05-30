@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.google.gson.reflect.TypeToken;
+import com.shyam.zenefits.ci.exceptions.InternalServerException;
+import com.shyam.zenefits.ci.exceptions.ZException;
 import com.shyam.zenefits.ci.pojo.CompanyBankAccount;
 import com.shyam.zenefits.ci.pojo.CompanyBasicInfo;
 import com.shyam.zenefits.ci.pojo.DepartmentInfo;
@@ -30,30 +32,30 @@ public class CompanyConnector extends AbstractZenefitsConnector {
 	public void init() {
 	}
 
-	public List<CompanyBasicInfo> getCoreCompanies() throws Exception {
+	public List<CompanyBasicInfo> getCoreCompanies() throws ZException {
 		String output = getWebData(getCompanyUrl());
 		return parseCompanyInfo(output);
 	}
 
-	public List<CompanyBankAccount> getCompanyBankAccount(String companyId) throws Exception {
+	public List<CompanyBankAccount> getCompanyBankAccount(String companyId) throws ZException {
 		// Parse the response
 		String output = getWebData(getCompanyBankUrl(companyId));
 		return parseCompanyBankAccountResponse(output);
 	}
 
-	public List<DepartmentInfo> getCompanyDepartments(String companyId) throws Exception {
+	public List<DepartmentInfo> getCompanyDepartments(String companyId) throws ZException {
 		// Parse the response
 		String output = getWebData(getCompanyDepartmentsUrl(companyId));
 		return parseCompanyDepartmentResponse(output);
 	}
 
-	public List<LocationInfo> getCompanyLocations(String companyId) throws Exception {
+	public List<LocationInfo> getCompanyLocations(String companyId) throws ZException {
 		// Parse the response
 		String output = getWebData(getCompanyLocationsUrl(companyId));
 		return parseCompanyLocationResponse(output);
 	}
 
-	private static List<CompanyBasicInfo> parseCompanyInfo(String output) {
+	private static List<CompanyBasicInfo> parseCompanyInfo(String output) throws InternalServerException {
 		List<CompanyBasicInfo> companyInfos = new ArrayList<>();
 		if (StringUtils.isEmpty(output)) {
 			return companyInfos;
@@ -63,7 +65,7 @@ public class CompanyConnector extends AbstractZenefitsConnector {
 		JSONObject jsonObject = new JSONObject(output);
 		int status = jsonObject.getInt("status");
 		if (status != HttpStatus.OK.value()) {
-			throw new InternalError("Error occured fetching the details. Kindly try after some time", null);
+			throw new InternalServerException("Error occured fetching the details. Kindly try after some time");
 		}
 
 		JSONObject dataObject = jsonObject.getJSONObject("data");
@@ -74,7 +76,7 @@ public class CompanyConnector extends AbstractZenefitsConnector {
 	}
 
 	private static List<CompanyBankAccount> parseCompanyBankAccountResponse(String output)
-			throws IllegalArgumentException, IllegalAccessException {
+			throws InternalServerException {
 		List<CompanyBankAccount> results = new ArrayList<>();
 		if (StringUtils.isEmpty(output)) {
 			return results;
@@ -84,27 +86,30 @@ public class CompanyConnector extends AbstractZenefitsConnector {
 		JSONObject jsonObject = new JSONObject(output);
 		int status = jsonObject.getInt("status");
 		if (status != HttpStatus.OK.value()) {
-			throw new InternalError("Error occured fetching the details. Kindly try after some time", null);
+			throw new InternalServerException("Error occured fetching the details. Kindly try after some time");
 		}
 
 		JSONObject dataObject = jsonObject.getJSONObject("data");
 		JSONArray companyBankAccountData = dataObject.getJSONArray("data");
 
 		System.out.println("Output:" + companyBankAccountData.toString());
-		if (companyBankAccountData.length() > 0) {
-			for (int i = 0; i < companyBankAccountData.length(); i++) {
-				JSONObject jsonCompanyBankAccountEntry = companyBankAccountData.getJSONObject(i);
-				CompanyBankAccount companyBankAccount = gson.fromJson(jsonCompanyBankAccountEntry.toString(),
-						CompanyBankAccount.class);
-				companyBankAccount.processNavigationUrls(jsonCompanyBankAccountEntry);
-				results.add(companyBankAccount);
+		try {
+			if (companyBankAccountData.length() > 0) {
+				for (int i = 0; i < companyBankAccountData.length(); i++) {
+					JSONObject jsonCompanyBankAccountEntry = companyBankAccountData.getJSONObject(i);
+					CompanyBankAccount companyBankAccount = gson.fromJson(jsonCompanyBankAccountEntry.toString(),
+							CompanyBankAccount.class);
+					companyBankAccount.processNavigationUrls(jsonCompanyBankAccountEntry);
+					results.add(companyBankAccount);
+				}
 			}
+		} catch (IllegalArgumentException | IllegalAccessException ex) {
+			throw new InternalServerException("Error parsing the response urls ex:" + ex.getMessage());
 		}
 		return results;
 	}
 
-	private static List<LocationInfo> parseCompanyLocationResponse(String output)
-			throws IllegalArgumentException, IllegalAccessException {
+	private static List<LocationInfo> parseCompanyLocationResponse(String output) throws InternalServerException {
 		List<LocationInfo> results = new ArrayList<>();
 		if (StringUtils.isEmpty(output)) {
 			return results;
@@ -114,27 +119,31 @@ public class CompanyConnector extends AbstractZenefitsConnector {
 		JSONObject jsonObject = new JSONObject(output);
 		int status = jsonObject.getInt("status");
 		if (status != HttpStatus.OK.value()) {
-			throw new InternalError("Error occured fetching the details. Kindly try after some time", null);
+			throw new InternalServerException("Error occured fetching the details. Kindly try after some time");
 		}
 
 		JSONObject dataObject = jsonObject.getJSONObject("data");
 		JSONArray companylocationInfoData = dataObject.getJSONArray("data");
 
 		System.out.println("Output:" + companylocationInfoData.toString());
-		if (companylocationInfoData.length() > 0) {
-			for (int i = 0; i < companylocationInfoData.length(); i++) {
-				JSONObject jsonCompanyLocationEntry = companylocationInfoData.getJSONObject(i);
-				LocationInfo companyLocationInfo = gson.fromJson(jsonCompanyLocationEntry.toString(),
-						LocationInfo.class);
-				companyLocationInfo.processNavigationUrls(jsonCompanyLocationEntry);
-				results.add(companyLocationInfo);
+		try {
+			if (companylocationInfoData.length() > 0) {
+				for (int i = 0; i < companylocationInfoData.length(); i++) {
+					JSONObject jsonCompanyLocationEntry = companylocationInfoData.getJSONObject(i);
+					LocationInfo companyLocationInfo = gson.fromJson(jsonCompanyLocationEntry.toString(),
+							LocationInfo.class);
+					companyLocationInfo.processNavigationUrls(jsonCompanyLocationEntry);
+					results.add(companyLocationInfo);
+				}
 			}
+		} catch (IllegalArgumentException | IllegalAccessException ex) {
+			throw new InternalServerException("Error parsing the response urls ex:" + ex.getMessage());
 		}
 		return results;
 	}
 
 	private static List<DepartmentInfo> parseCompanyDepartmentResponse(String output)
-			throws IllegalArgumentException, IllegalAccessException {
+			throws InternalServerException {
 		List<DepartmentInfo> results = new ArrayList<>();
 		if (StringUtils.isEmpty(output)) {
 			return results;
@@ -144,23 +153,27 @@ public class CompanyConnector extends AbstractZenefitsConnector {
 		JSONObject jsonObject = new JSONObject(output);
 		int status = jsonObject.getInt("status");
 		if (status != HttpStatus.OK.value()) {
-			throw new InternalError("Error occured fetching the details. Kindly try after some time", null);
+			throw new InternalServerException("Error occured fetching the details. Kindly try after some time");
 		}
 
 		JSONObject dataObject = jsonObject.getJSONObject("data");
 		JSONArray companyDepartmentData = dataObject.getJSONArray("data");
 
 		System.out.println("Output:" + companyDepartmentData.toString());
-		if (companyDepartmentData.length() > 0) {
-			for (int i = 0; i < companyDepartmentData.length(); i++) {
-				JSONObject jsonCompanyDepartmentEntry = companyDepartmentData.getJSONObject(i);
-				DepartmentInfo companyDepartmentAccount = gson.fromJson(jsonCompanyDepartmentEntry.toString(),
-						DepartmentInfo.class);
-				companyDepartmentAccount.processNavigationUrls(jsonCompanyDepartmentEntry);
-				results.add(companyDepartmentAccount);
+		try {
+			if (companyDepartmentData.length() > 0) {
+				for (int i = 0; i < companyDepartmentData.length(); i++) {
+					JSONObject jsonCompanyDepartmentEntry = companyDepartmentData.getJSONObject(i);
+					DepartmentInfo companyDepartmentAccount = gson.fromJson(jsonCompanyDepartmentEntry.toString(),
+							DepartmentInfo.class);
+					companyDepartmentAccount.processNavigationUrls(jsonCompanyDepartmentEntry);
+					results.add(companyDepartmentAccount);
+				}
 			}
+			return results;
+		} catch (IllegalArgumentException | IllegalAccessException ex) {
+			throw new InternalServerException("Error parsing the response urls ex:" + ex.getMessage());
 		}
-		return results;
 	}
 
 	private static String getCompanyUrl() {

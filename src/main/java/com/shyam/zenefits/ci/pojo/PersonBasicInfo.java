@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import com.google.gson.annotations.Expose;
 
 public class PersonBasicInfo extends AbstractZenifitsEntity {
-    @Expose
+	@Expose
 	private String preferred_name;
 	private String postal_code;
 	private String city;
@@ -19,7 +19,6 @@ public class PersonBasicInfo extends AbstractZenifitsEntity {
 	private String type;
 	private String status;
 	private String street2;
-	private String object;
 	private String photo_thumbnail_url;
 	private String personal_phone;
 	private String federal_filing_status;
@@ -128,14 +127,6 @@ public class PersonBasicInfo extends AbstractZenifitsEntity {
 		this.street2 = street2;
 	}
 
-	public String getObject() {
-		return object;
-	}
-
-	public void setObject(String object) {
-		this.object = object;
-	}
-
 	public String getPhoto_thumbnail_url() {
 		return photo_thumbnail_url;
 	}
@@ -206,16 +197,15 @@ public class PersonBasicInfo extends AbstractZenifitsEntity {
 				+ ", first_name=" + first_name + ", middle_name=" + middle_name + ", last_name=" + last_name
 				+ ", title=" + title + ", work_phone=" + work_phone + ", personal_email=" + personal_email
 				+ ", street1=" + street1 + ", type=" + type + ", status=" + status + ", street2=" + street2
-				+ ", object=" + object + ", photo_thumbnail_url=" + photo_thumbnail_url + ", personal_phone="
-				+ personal_phone + ", federal_filing_status=" + federal_filing_status + ", work_email=" + work_email
-				+ ", photo_url=" + photo_url + ", gender=" + gender + ", country=" + country + ", toString()="
-				+ super.toString() + "]";
+				+ ", photo_thumbnail_url=" + photo_thumbnail_url + ", personal_phone=" + personal_phone
+				+ ", federal_filing_status=" + federal_filing_status + ", work_email=" + work_email + ", photo_url="
+				+ photo_url + ", gender=" + gender + ", country=" + country + ", toString()=" + super.toString() + "]";
 	}
 
 	@Override
 	public void processNavigationUrls(JSONObject responseObject)
 			throws IllegalArgumentException, IllegalAccessException {
-		
+
 	}
 
 	// private String manager; // TODO
