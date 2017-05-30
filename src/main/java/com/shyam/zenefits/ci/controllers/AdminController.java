@@ -27,7 +27,7 @@ public class AdminController {
 	@RequestMapping(value = "/init", method = RequestMethod.POST)
 	@ResponseBody
 	public void initUsers(@RequestParam(name = "passphrase", required = true) String passPhrase) {
-		if (PASS_PHRASE.equals(passPhrase)) {
+		if (!PASS_PHRASE.equals(passPhrase)) {
 			return;
 		}
 

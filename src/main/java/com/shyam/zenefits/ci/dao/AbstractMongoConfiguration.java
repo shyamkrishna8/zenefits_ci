@@ -9,7 +9,7 @@ import com.mongodb.MongoClient;
 @Service
 public class AbstractMongoConfiguration {
 
-	private static final String DATABASE_NAME = "dbotica";
+	private static final String DATABASE_NAME = "zenefits";
 	private static MongoOperations mongoOperations;
 	private static String COLLECTION;
 

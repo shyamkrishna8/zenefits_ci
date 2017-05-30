@@ -13,7 +13,7 @@ public class UserDAO extends AbstractDAO {
 				update(p);
 			}
 		} catch (Exception ex) {
-			// throw Exception
+			System.out.println("ex:" + ex.getMessage());
 		}
 	}
 	
@@ -23,7 +23,7 @@ public class UserDAO extends AbstractDAO {
 				updateEntity(p);
 			}
 		}catch(Exception ex){
-			
+			System.out.println("ex:" + ex.getMessage());
 		}
 	}
 }

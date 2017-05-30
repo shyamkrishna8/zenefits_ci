@@ -11,4 +11,5 @@ public class Constants {
 	public static final String DEFAULT_ADMIN_USER_FIRST_NAME = "Admin";
 	public static final String DEFAULT_ADMIN_USER_LAST_NAME = "Shyam";
 	public static final String PASSWORD_HASH_ALGORITHM = "MD5";
+	public static final String SPRING_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
 }

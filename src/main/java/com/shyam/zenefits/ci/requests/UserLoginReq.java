@@ -45,7 +45,7 @@ public class UserLoginReq {
 		if (StringUtils.isEmpty(emailId)) {
 			errors.add("emailId");
 		}
-		if (!StringUtils.isEmpty(password)) {
+		if (StringUtils.isEmpty(password)) {
 			errors.add("password");
 		}
 
