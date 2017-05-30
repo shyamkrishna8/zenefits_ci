@@ -56,7 +56,7 @@ public class User extends AbstractEntity {
 		this.passwordHash = encrypt(password);
 	}
 
-	private static String encrypt(String password) {
+	public final static String encrypt(String password) {
 		try {
 			MessageDigest md = MessageDigest.getInstance(Constants.PASSWORD_HASH_ALGORITHM);
 			byte[] passBytes = password.getBytes();
@@ -79,6 +79,11 @@ public class User extends AbstractEntity {
 	public static User createDefaultUser() {
 		return new User(Constants.DEFAULT_ADMIN_USER_FIRST_NAME, Constants.DEFAULT_ADMIN_USER_LAST_NAME,
 				Constants.DEFAULT_ADMIN_USER);
+	}
+
+	public static class FieldConstants extends AbstractEntity.FieldConstants {
+		public static final String EMAIL_ID = "emailId";
+		public static final String PASSWORD_HASH = "passwordHash";
 	}
 
 	@Override

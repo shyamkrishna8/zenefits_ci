@@ -33,5 +33,4 @@ public class AdminController {
 
 		userManager.initUser();
 	}
-
 }
