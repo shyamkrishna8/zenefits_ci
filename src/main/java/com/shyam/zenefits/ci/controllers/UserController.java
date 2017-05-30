@@ -3,6 +3,8 @@ package com.shyam.zenefits.ci.controllers;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +18,8 @@ import com.shyam.zenefits.ci.managers.UserManager;
 import com.shyam.zenefits.ci.requests.UserLoginReq;
 import com.shyam.zenefits.ci.response.BasicResponse;
 
+@CrossOrigin(methods = { RequestMethod.GET, RequestMethod.POST }, origins = {
+		"http://localhost" }, allowCredentials = "true")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -23,7 +27,7 @@ public class UserController {
 	@Autowired
 	private UserManager userManager;
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public BasicResponse validateLogin(@RequestBody UserLoginReq req, HttpServletRequest request)
 			throws BadRequestException, ConflictException {
@@ -36,4 +40,15 @@ public class UserController {
 		// Create session
 		return new BasicResponse(user);
 	}
+
+	@RequestMapping(value = "/logout", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public BasicResponse logout(HttpServletRequest request) throws BadRequestException {
+
+		userManager.destroySession(request);
+
+		// Create session
+		return new BasicResponse();
+	}
+
 }

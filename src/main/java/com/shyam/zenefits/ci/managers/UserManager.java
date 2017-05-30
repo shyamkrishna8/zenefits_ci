@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -71,10 +70,16 @@ public class UserManager {
 
 	public void validateSession(HttpServletRequest request) throws ForbiddenException {
 		HttpSession session = request.getSession();
-		SecurityContext previousContext = (SecurityContext) session.getAttribute(Constants.SPRING_SECURITY_CONTEXT);
+		Object previousContext = session.getAttribute(Constants.SPRING_SECURITY_CONTEXT);
 		Object emailId = session.getAttribute(USER_EMAIL_SESSION_PARAM);
-		if (previousContext == null || emailId == null || StringUtils.isEmpty(emailId)) {
+		if (previousContext == null || StringUtils.isEmpty(previousContext) || emailId == null
+				|| StringUtils.isEmpty(emailId)) {
 			throw new ForbiddenException(ErrorCode.NOT_LOGGED_IN, "No user logged in");
 		}
+	}
+
+	public void destroySession(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		session.invalidate();
 	}
 }
