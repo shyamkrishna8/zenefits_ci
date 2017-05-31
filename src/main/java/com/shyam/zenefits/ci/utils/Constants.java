@@ -12,4 +12,8 @@ public class Constants {
 	public static final String DEFAULT_ADMIN_USER_LAST_NAME = "Shyam";
 	public static final String PASSWORD_HASH_ALGORITHM = "MD5";
 	public static final String SPRING_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
+
+	public static final String LOCAL_ADDRESS = "http://localhost";
+	public static final String REMOTE_ADDRESS = "http://54.255.130.194";
+	
 }

@@ -17,9 +17,10 @@ import com.shyam.zenefits.ci.exceptions.ConflictException;
 import com.shyam.zenefits.ci.managers.UserManager;
 import com.shyam.zenefits.ci.requests.UserLoginReq;
 import com.shyam.zenefits.ci.response.BasicResponse;
+import com.shyam.zenefits.ci.utils.Constants;
 
 @CrossOrigin(methods = { RequestMethod.GET, RequestMethod.POST }, origins = {
-		"http://localhost" }, allowCredentials = "true")
+		Constants.LOCAL_ADDRESS, Constants.REMOTE_ADDRESS }, allowCredentials = "true")
 @RestController
 @RequestMapping("/user")
 public class UserController {

@@ -15,8 +15,9 @@ import com.shyam.zenefits.ci.managers.PeopleManager;
 import com.shyam.zenefits.ci.managers.UserManager;
 import com.shyam.zenefits.ci.requests.GetPeoplesReq;
 import com.shyam.zenefits.ci.response.BasicListResponse;
+import com.shyam.zenefits.ci.utils.Constants;
 
-@CrossOrigin(methods = { RequestMethod.GET }, origins = { "http://localhost" }, allowCredentials = "true")
+@CrossOrigin(methods = { RequestMethod.GET }, origins = { Constants.LOCAL_ADDRESS, Constants.REMOTE_ADDRESS }, allowCredentials = "true")
 @RestController
 @RequestMapping("/people")
 public class PeopleController {

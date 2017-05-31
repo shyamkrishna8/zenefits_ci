@@ -20,8 +20,9 @@ import com.shyam.zenefits.ci.pojo.CompanyBasicInfo;
 import com.shyam.zenefits.ci.pojo.DepartmentInfo;
 import com.shyam.zenefits.ci.pojo.LocationInfo;
 import com.shyam.zenefits.ci.response.BasicResponse;
+import com.shyam.zenefits.ci.utils.Constants;
 
-@CrossOrigin(methods = { RequestMethod.GET }, origins = { "http://localhost" }, allowCredentials = "true")
+@CrossOrigin(methods = { RequestMethod.GET }, origins = { Constants.LOCAL_ADDRESS, Constants.REMOTE_ADDRESS }, allowCredentials = "true")
 @RestController
 @RequestMapping("/company")
 public class CompanyController {
