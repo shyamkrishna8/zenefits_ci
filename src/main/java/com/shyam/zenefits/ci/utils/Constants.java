@@ -14,6 +14,6 @@ public class Constants {
 	public static final String SPRING_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
 
 	public static final String LOCAL_ADDRESS = "http://localhost";
-	public static final String REMOTE_ADDRESS = "http://54.255.130.194";
+	public static final String REMOTE_ADDRESS = "http://52.77.232.254";
 	
 }
